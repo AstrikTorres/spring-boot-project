@@ -2,9 +2,13 @@ package com.gestopago.springboot.controller;
 
 import com.gestopago.springboot.model.User;
 import com.gestopago.springboot.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +20,30 @@ public class UserController {
 
     private final UserServiceImpl userService;
     private final PasswordEncoder bCryptEncoder;
+    private final AuthenticationProvider authenticationProvider;
 
-    public UserController(UserServiceImpl userService, PasswordEncoder bCryptEncoder, PasswordEncoder bCryptPasswordEncoder) {
+    public UserController(UserServiceImpl userService, PasswordEncoder bCryptEncoder, AuthenticationProvider authenticationProvider) {
         this.userService = userService;
         this.bCryptEncoder = bCryptEncoder;
+        this.authenticationProvider = authenticationProvider;
     }
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<HttpStatus> login(@RequestBody User user) throws BadCredentialsException {
+        Authentication authObject;
+        try {
+            authObject = authenticationProvider.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authObject);
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register")
