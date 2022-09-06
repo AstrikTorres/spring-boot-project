@@ -4,7 +4,6 @@ import com.gestopago.springboot.model.User;
 import com.gestopago.springboot.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +14,10 @@ import java.util.List;
 public class UserController {
 
     private final UserServiceImpl userService;
-    private final AuthenticationProvider authenticationProvider;
     private final PasswordEncoder bCryptEncoder;
 
-    public UserController(UserServiceImpl userService, AuthenticationProvider authenticationProvider, PasswordEncoder bCryptEncoder) {
+    public UserController(UserServiceImpl userService, PasswordEncoder bCryptEncoder) {
         this.userService = userService;
-        this.authenticationProvider = authenticationProvider;
         this.bCryptEncoder = bCryptEncoder;
     }
 
@@ -38,19 +35,19 @@ public class UserController {
                 : new ResponseEntity<>(userCreated, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") long userId) {
         return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") long id
             , @RequestBody User user) {
         user.setPassword(bCryptEncoder.encode(user.getPassword()));
         return new ResponseEntity<>(userService.updateUser(user, id), HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") long id){
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
