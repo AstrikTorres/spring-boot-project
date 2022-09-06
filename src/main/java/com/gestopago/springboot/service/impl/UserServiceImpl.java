@@ -24,7 +24,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(User user) {
-        return userRepository.save(user);
+        return userRepository.existsByUsername(user.getUsername())
+            ? null : userRepository.save(user);
     }
 
     @Override

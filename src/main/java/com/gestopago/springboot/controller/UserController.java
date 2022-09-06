@@ -5,10 +5,6 @@ import com.gestopago.springboot.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +15,13 @@ import java.util.List;
 public class UserController {
 
     private final UserServiceImpl userService;
-    private final PasswordEncoder bCryptEncoder;
     private final AuthenticationProvider authenticationProvider;
+    private final PasswordEncoder bCryptEncoder;
 
-    public UserController(UserServiceImpl userService, PasswordEncoder bCryptEncoder, AuthenticationProvider authenticationProvider) {
+    public UserController(UserServiceImpl userService, AuthenticationProvider authenticationProvider, PasswordEncoder bCryptEncoder) {
         this.userService = userService;
-        this.bCryptEncoder = bCryptEncoder;
         this.authenticationProvider = authenticationProvider;
+        this.bCryptEncoder = bCryptEncoder;
     }
 
     @GetMapping
@@ -33,23 +29,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<HttpStatus> login(@RequestBody User user) throws BadCredentialsException {
-        Authentication authObject;
-        try {
-            authObject = authenticationProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authObject);
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         user.setPassword(bCryptEncoder.encode(user.getPassword()));
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+        User userCreated = userService.saveUser(user);
+        return userCreated == null
+                ? new ResponseEntity<>(userCreated, HttpStatus.SEE_OTHER)
+                : new ResponseEntity<>(userCreated, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
@@ -59,7 +45,8 @@ public class UserController {
 
     @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") long id
-                                           ,@RequestBody User user){
+            , @RequestBody User user) {
+        user.setPassword(bCryptEncoder.encode(user.getPassword()));
         return new ResponseEntity<>(userService.updateUser(user, id), HttpStatus.OK);
     }
 
