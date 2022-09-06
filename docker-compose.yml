@@ -1,12 +1,11 @@
 version: "3"
 
 services: 
-  springboot-app:
-    container_name: spring-app
-    image: springbooot-app
+  springboot:
+    image: springboot
     build: .
     ports:
-      - 8080:8080 
+      - "8080" 
     environment:
       MYSQL_HOST: mysqldb
       MYSQL_USER: root
@@ -25,6 +24,14 @@ services:
     environment:
       MYSQL_DATABASE: ems
       MYSQL_ROOT_PASSWORD: root
+
+  loadbalancer:
+    container_name: loadbalancer
+    image: nginx
+    ports:
+      - 4000:4000
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
 
 volumes:
   db-mysql:
