@@ -1,0 +1,8 @@
+# Development environment for the project
+FROM ubuntu
+RUN apt-get update && apt-get install -y maven && apt-get install -y openjdk-11-jdk
+RUN useradd -ms /bin/bash dev
+USER dev
+ADD . /home/dev/app
+WORKDIR /home/dev/app
+CMD tail -f /dev/null
