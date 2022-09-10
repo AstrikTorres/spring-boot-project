@@ -9,13 +9,14 @@ import com.gestopago.springboot.service.AddressService;
 @Controller
 public class PagesController {
 
-    private final AddressService addressService;
+    private AddressService addressService;
 
     public PagesController(AddressService addressService) {
+        super();
         this.addressService = addressService;
     }
 
-    @RequestMapping("/home")
+    @RequestMapping("/")
     public String viewHome(Model model) throws Exception {
         model.addAttribute(
             "serverAddress",
@@ -27,9 +28,16 @@ public class PagesController {
     @RequestMapping("/admin")
     public String viewAdmin(Model model) throws Exception {
         model.addAttribute(
-            "serverAddress",
-            addressService.getServerAddress()
-        );
+                "serverAddress",
+                addressService.getServerAddress());
         return "admin";
+    }
+
+    @RequestMapping("/user")
+    public String viewUser(Model model) throws Exception {
+        model.addAttribute(
+                "serverAddress",
+                addressService.getServerAddress());
+        return "user";
     }
 }

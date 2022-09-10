@@ -6,6 +6,6 @@ COPY . .
 RUN mvn -B -s /usr/share/maven/ref/settings-docker.xml package -DskipTests
 
 FROM openjdk:11.0.16-oracle
-COPY --from=mvn /app/target/*.jar /app/app.jar
+COPY --from=mvn /app/target/*.war /app/app.war
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.war"]

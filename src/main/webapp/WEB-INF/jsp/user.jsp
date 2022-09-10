@@ -2,10 +2,10 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
-    <title>Admin</title>
+    <title>User</title>
 </head>
 <body>
-    <h1>Admin</h1>
-    <p>From server admin:${serverAddress}</p>
+    <h1>User</h1>
+    <p>From server user:${serverAddress}</p>
 </body>
 </html>
