@@ -16,8 +16,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class MySecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final LoginSuccesHandler loginSuccesHandler;
 
-    public MySecurityConfig(UserDetailsService userDetailsService) {
+    public MySecurityConfig(UserDetailsService userDetailsService, LoginSuccesHandler loginSuccesHandler) {
+        this.loginSuccesHandler = loginSuccesHandler;
         this.userDetailsService = userDetailsService;
     }
 
@@ -31,15 +33,15 @@ public class MySecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/", true)
-                // .failureHandler(authenticationFailureHandler())
+                    .loginPage("/login")
+                    .loginProcessingUrl("/perform_login")
+                    .successHandler(loginSuccesHandler)
+                    // .failureHandler(authenticationFailureHandler())
                 .and()
                 .logout()
-                .logoutUrl("/perform_logout")
-                .deleteCookies("JSESSIONID");
-                // .logoutSuccessHandler(logoutSuccessHandler());
+                    .logoutUrl("/perform_logout")
+                    .deleteCookies("JSESSIONID");
+                    // .logoutSuccessHandler(logoutSuccessHandler());
 
         return http.build();
     }
