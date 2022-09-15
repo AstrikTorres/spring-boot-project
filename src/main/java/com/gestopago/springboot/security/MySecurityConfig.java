@@ -24,12 +24,22 @@ public class MySecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/api/users/register", "/login").permitAll()
+                .antMatchers("/api/users/register", "/login*").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/home").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/", true)
+                // .failureHandler(authenticationFailureHandler())
+                .and()
+                .logout()
+                .logoutUrl("/perform_logout")
+                .deleteCookies("JSESSIONID");
+                // .logoutSuccessHandler(logoutSuccessHandler());
 
         return http.build();
     }

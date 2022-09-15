@@ -7,5 +7,6 @@
 <body>
     <h1>Home</h1>
     <p>From ${serverAddress}</p>
+    <a href="/perform_logout">logout</a>  
 </body>
 </html>

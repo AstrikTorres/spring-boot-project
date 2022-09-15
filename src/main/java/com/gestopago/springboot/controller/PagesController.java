@@ -40,4 +40,9 @@ public class PagesController {
                 addressService.getServerAddress());
         return "user";
     }
+
+    @RequestMapping("/login")
+    public String viewLogin(Model model) throws Exception {
+        return "login";
+    }
 }

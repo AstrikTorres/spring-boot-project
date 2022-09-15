@@ -7,5 +7,6 @@
 <body>
     <h1>Admin</h1>
     <p>From server admin:${serverAddress}</p>
+    <a href="/perform_logout">logout</a>  
 </body>
 </html>
