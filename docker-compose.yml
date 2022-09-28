@@ -37,5 +37,36 @@ services:
     depends_on:
       - springboot
 
+  datadog:
+    container_name: datadog
+    image: datadog/agent:7
+    environment:
+      - DD_API_KEY=${DATADOG_API_KEY}
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_LOGS_CONFIG_USE_HTTP=true
+#      - DD_APM_ANALYZED_SPANS=mysqldb:query
+#      - DD_APM_ANALYZED_SPANS=springboot:query
+#      - DD_APM_ANALYZED_SPANS=loadbalancer:query
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /proc/:/host/proc/:ro
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+    ports:
+      - 8126:8126
+#    labels:
+#      com.datadoghq.ad.logs: '[
+#        {"source": "spring", "service": "springboot", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]},
+#        {"source": "nginx", "service": "loadbalancer"}
+#      ]'
+    depends_on:
+      - springboot
+      - mysqldb
+      - loadbalancer
+
 volumes:
   db-mysql:
