@@ -2,7 +2,8 @@ version: "3"
 
 services: 
   springboot:
-    image: springboot
+    image: springboot-dev
+    container_name: springboot-dev
     build: 
       context: .
       dockerfile: Dockerfile.dev
@@ -17,7 +18,7 @@ services:
       - mysqldb
       
   mysqldb: 
-    container_name: mysqldb
+    container_name: mysql-dev
     image: mysql
     volumes:
       -  db-mysql-dev:/var/lib/mysql
