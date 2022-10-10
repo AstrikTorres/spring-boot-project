@@ -3,10 +3,12 @@ package com.gestopago.springboot.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.gestopago.springboot.service.AddressService;
 
 @Controller
+@RequestMapping(method = RequestMethod.GET)
 public class PagesController {
 
     private AddressService addressService;
