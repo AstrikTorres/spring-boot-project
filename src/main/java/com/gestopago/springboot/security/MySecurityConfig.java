@@ -32,14 +32,11 @@ public class MySecurityConfig {
                 .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic()
-/*                .formLogin()
+                .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/perform_login")
                     .successHandler(loginSuccesHandler)
                     // .failureHandler(authenticationFailureHandler())
-
- */
                 .and()
                 .logout()
                     .logoutUrl("/perform_logout")
