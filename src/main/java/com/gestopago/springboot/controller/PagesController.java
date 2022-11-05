@@ -47,4 +47,19 @@ public class PagesController {
     public String viewLogin(Model model) throws Exception {
         return "login";
     }
+
+    @RequestMapping("/p1")
+    public String viewP1(Model model) throws Exception {
+        return "pantalla1";
+    }
+
+    @RequestMapping("/p2")
+    public String viewP2(Model model) throws Exception {
+        return "pantalla2";
+    }
+
+    @RequestMapping("/p3")
+    public String viewP3(Model model) throws Exception {
+        return "pantalla3";
+    }
 }
