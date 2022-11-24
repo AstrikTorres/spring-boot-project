@@ -3,6 +3,7 @@ package com.gestopago.springboot.controller;
 import com.gestopago.springboot.model.User;
 import com.gestopago.springboot.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,20 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<User> createUser(@RequestBody User user) {
+        user.setPassword(bCryptEncoder.encode(user.getPassword()));
+        User userCreated = userService.saveUser(user);
+        return userCreated == null
+                ? new ResponseEntity<>(userCreated, HttpStatus.SEE_OTHER)
+                : new ResponseEntity<>(userCreated, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(
+        value = "/signup",
+        method = RequestMethod.POST,
+        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<User> signup(User user) {
         user.setPassword(bCryptEncoder.encode(user.getPassword()));
         User userCreated = userService.saveUser(user);
         return userCreated == null

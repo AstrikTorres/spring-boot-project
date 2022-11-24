@@ -48,6 +48,11 @@ public class PagesController {
         return "login";
     }
 
+    @RequestMapping("/signup")
+    public String viewRegister(Model model) throws Exception {
+        return "signup";
+    }
+
     @RequestMapping("/p1")
     public String viewP1(Model model) throws Exception {
         return "pantalla1";
