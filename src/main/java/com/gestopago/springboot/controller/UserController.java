@@ -32,21 +32,7 @@ public class UserController {
         user.setPassword(bCryptEncoder.encode(user.getPassword()));
         User userCreated = userService.saveUser(user);
         return userCreated == null
-                ? new ResponseEntity<>(userCreated, HttpStatus.SEE_OTHER)
-                : new ResponseEntity<>(userCreated, HttpStatus.CREATED);
-    }
-
-    @RequestMapping(
-        value = "/signup",
-        method = RequestMethod.POST,
-        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<User> signup(User user) {
-        user.setPassword(bCryptEncoder.encode(user.getPassword()));
-        User userCreated = userService.saveUser(user);
-        return userCreated == null
-                ? new ResponseEntity<>(userCreated, HttpStatus.SEE_OTHER)
+                ? new ResponseEntity<>(userCreated, HttpStatus.CONFLICT)
                 : new ResponseEntity<>(userCreated, HttpStatus.CREATED);
     }
 
