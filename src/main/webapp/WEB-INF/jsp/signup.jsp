@@ -27,6 +27,7 @@
     value="${_csrf.token}"/>
     <button type="submit" class="btn">Sign up</button>  
 </form>
+<a href="/login">Login</a>
 </html>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/signup.js" type="text/javascript"></script>

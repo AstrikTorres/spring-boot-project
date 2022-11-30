@@ -25,6 +25,6 @@ public class User {
 
     // Default value is 'USER'
     @Column(nullable = false)
-    private String role = "USER";
+    private Role role = Role.USER;
 
 }
