@@ -6,16 +6,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.gestopago.springboot.service.AddressService;
+import com.gestopago.springboot.service.UserService;
 
 @Controller
 @RequestMapping(method = RequestMethod.GET)
 public class PagesController {
 
     private AddressService addressService;
+    private UserService userService;
 
-    public PagesController(AddressService addressService) {
+    public PagesController(AddressService addressService, UserService userService) {
         super();
         this.addressService = addressService;
+        this.userService = userService;
     }
 
     @RequestMapping("/")
@@ -30,8 +33,8 @@ public class PagesController {
     @RequestMapping("/admin")
     public String viewAdmin(Model model) throws Exception {
         model.addAttribute(
-                "serverAddress",
-                addressService.getServerAddress());
+                "users",
+                userService.getAllUsers());
         return "admin";
     }
 
