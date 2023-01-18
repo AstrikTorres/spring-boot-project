@@ -2,6 +2,7 @@ package com.gestopago.springboot.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,10 +27,13 @@ public class MySecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/api/users/register", "/login*").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
+                .mvcMatchers("/api/users/register", "/api/users/signup", "/login*", "/signup").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/js/**").permitAll()
+                .mvcMatchers("/admin").hasRole("ADMIN")
+                .mvcMatchers("/user").hasAnyRole("ADMIN", "USER")
+                .mvcMatchers("/p1").hasAnyRole("ADMIN", "USER")
+                .mvcMatchers("/p2").hasAnyRole("ADMIN", "EDITOR")
+                .mvcMatchers("/p3").hasAnyRole("ADMIN", "EDITOR", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
